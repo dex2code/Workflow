@@ -1,1 +1,3 @@
-# Javascripts - connect to SC, transfer, generate wallets
+# Javascripts 
+
+- connect to SC, transfer, generate wallets
