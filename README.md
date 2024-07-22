@@ -9,10 +9,10 @@ Building GenWallet.js
 - Public key 
 - Private key 
 
-
-
-Sample code - https://github.com/massalabs/massa-web3/blob/2d881ce/src/web3/WalletClient.ts#L291
-Doc - https://web3.docs.massa.net/classes/WalletClient.html#walletGenerateNewAccount
+/
+/
+- Sample code - https://github.com/massalabs/massa-web3/blob/2d881ce/src/web3/WalletClient.ts#L291
+- Doc - https://web3.docs.massa.net/classes/WalletClient.html#walletGenerateNewAccount
 ```
  /**
    * Generates a new wallet account.
