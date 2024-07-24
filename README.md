@@ -49,19 +49,24 @@ Building GenWallet.js
 
 An error is returned 
 ```
-    crypto: { randomBytes } // Importování randomBytes
-              ^
+    Generated PublicKey: PublicKey {
+  version: 0,
+  base58Encoded: 'P12SF1F1ecmJdX2ucdxjw5tQdvD234gG8fKAtEhWyCJMmXzinwNm',
+  bytes: Uint8Array(32) [
+    189,   2, 136, 172,  14, 89,  63,  27,
+    186,  80,  49, 186, 167,  6,  80,  14,
+    200, 233,  76, 149, 199, 24,  25, 251,
+    130, 255, 176,  94,  40, 53, 248, 181
+  ]
+}
+Error generating new account: Error: Invalid checksum
+    at decode (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\node_modules\@massalabs\massa-web3\node_modules\bs58check\base.js:41:25)
+    at base58Decode (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\node_modules\@massalabs\massa-web3\dist\cmd\utils\Xbqcrypto.js:47:44)
+    at Address.decodeVersionAndAddressBytes (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\node_modules\@massalabs\massa-web3\dist\cmd\utils\keyAndAddresses.js:99:84)
+    at Address._initialize (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\node_modules\@massalabs\massa-web3\dist\cmd\utils\keyAndAddresses.js:88:14)
+    at new Address (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\node_modules\@massalabs\massa-web3\dist\cmd\utils\keyAndAddresses.js:84:14)
+    at walletGenerateNewAccount (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\xxx PlayerGenWallet.js:34:19)
 
-TypeError: Cannot read properties of undefined (reading 'randomBytes')
-    at Object.<anonymous> (E:\VS Code\MW0rld - Gama - 0.2.3\ChainScript\xxx PlayerGenWallet.js:12:15)
-    at Module._compile (node:internal/modules/cjs/loader:1369:14)
-    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10)
-    at Module.load (node:internal/modules/cjs/loader:1206:32)
-    at Module._load (node:internal/modules/cjs/loader:1022:12)
-    at Function.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:135:12)
-    at node:internal/main/run_main_module:28:49
-
-Node.js v20.12.2
 ```
 
 
