@@ -1,61 +1,47 @@
-const {
-    Client,
-    ClientFactory,
-    fromMAS,
-    CHAIN_ID,
-    ProviderType,
-    EOperationStatus,
-    Address,
-    SecretKey,
-    PublicKey,
-    utils: { base58Encode, varintEncode },
-    crypto: { randomBytes } // Import randomBytes
-} = require("@massalabs/massa-web3");
+const { base58Encode, varintEncode } = require('@massalabs/massa-web3/dist/cmd/utils/Xbqcrypto');
+const ed = require('@noble/ed25519');
+const { SecretKey, PublicKey, Address } = require('@massalabs/massa-web3/dist/cmd/utils/keyAndAddresses');
 
-const baseProviders = [
-    {
-        url: "https://mainnet.massa.net/api/v2",
-        type: ProviderType.PUBLIC
-    }
-];
+const SECRET_KEY_PREFIX = 'S';
+const VERSION_NUMBER = 0;
+const ADDRESS_PREFIX_USER = 'AU';
 
-(async function () {
-    
-    const baseClient = await ClientFactory.createCustomClient(
-        baseProviders,
-        CHAIN_ID.MainNet,
-        true,
-        baseAccount
-    );  
-    
+/**
+ * Generates a new wallet account.
+ *
+ * @returns {Promise<Object>} A promise that resolves to an account object with address, secretKey, and publicKey.
+ */
+async function walletGenerateNewAccount() {
+  // Generate private key
+  const secretKeyArray = ed.utils.randomPrivateKey();
+
+  // Encode the private key
+  const version = Buffer.from(varintEncode(VERSION_NUMBER));
+  const secretKeyBase58Encoded = SECRET_KEY_PREFIX + base58Encode(Buffer.concat([version, secretKeyArray]));
   
-    // Generate a new wallet account
-    const walletGenerateNewAccount = async () => {
-        const VERSION_NUMBER = 1;
-        const SECRET_KEY_PREFIX = "S";
+  // Create SecretKey instance
+  const secretKey = new SecretKey(secretKeyBase58Encoded);
+  
+  // Get public key
+  const publicKey = await secretKey.getPublicKey();
+  console.log('Generated PublicKey:', publicKey);
+  
+  // Ensure public key has correct prefix
+  const publicKeyBase58Encoded = publicKey.base58Encoded;
+  const addressBase58Encoded = ADDRESS_PREFIX_USER + publicKeyBase58Encoded.slice(2); // Remove the first 2 characters 'P1' and add 'AU'
+  
+  // Create Address instance
+  const address = new Address(addressBase58Encoded);
+  console.log('Generated Address:', address);
+  
+  return {
+    address: address.base58Encoded,
+    secretKey: secretKeyBase58Encoded,
+    publicKey: publicKeyBase58Encoded,
+  };
+}
 
-        // Generate random private key
-        const secretKeyArray = randomBytes(32); 
-        const version = Buffer.from(varintEncode(VERSION_NUMBER));
-        const secretKeyBase58Encoded = SECRET_KEY_PREFIX + base58Encode(Buffer.concat([version, secretKeyArray]));
-        const secretKey = new SecretKey(secretKeyBase58Encoded);
-        const publicKey = await secretKey.getPublicKey();
-        const address = new Address(publicKey);
-
-        return {
-            address: address.toString(),
-            secretKey: secretKeyBase58Encoded,
-            publicKey: publicKey.toString()
-        };
-    };
-
-    const newAccount = await walletGenerateNewAccount();
-
-    // Log the new wallet details in JSON format
-    console.log(JSON.stringify({
-        address: newAccount.address,
-        publicKey: newAccount.publicKey,
-        secretKey: newAccount.secretKey
-    }));
-
-})();
+// Example usage
+walletGenerateNewAccount()
+  .then(account => console.log('New account generated:', account))
+  .catch(err => console.error('Error generating new account:', err));
