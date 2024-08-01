@@ -21,20 +21,18 @@ async function walletGenerateNewAccount() {
   const publicKey = await secretKey.getPublicKey();
   console.log('Generated PublicKey:', publicKey);
 
-  // Ensure public key has correct prefix
-  const publicKeyBase58Encoded = publicKey.base58Encoded;
-  const addressBase58Encoded = ADDRESS_PREFIX_USER + publicKeyBase58Encoded.slice(2); // Remove the first 2 characters 'P1' and add 'AU'
+  const address = new Address(publicKey.base58Encoded);
 
   // Create Address instance
   try {
-    const address = new Address(addressBase58Encoded);
+    const address = new Address(publicKey.base58Encoded);
     console.log('Generated Address:', address);
 
     return {
       address: address.base58Encoded,
       secretKey: secretKeyBase58Encoded,
-      publicKey: publicKeyBase58Encoded,
-    };
+      publicKey: publicKey.base58Encoded,
+    } as IAccount;
   } catch (error) {
     console.error('Error creating Address instance:', error);
   }
